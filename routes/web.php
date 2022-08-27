@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BannerController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,3 +25,6 @@ Route::get('/product', function () {
 Route::get('/brand', function () {
     return view('brand.index');
 });
+
+Route::get('/banner', [BannerController::class,  'index']);
+Route::get('/banner/create', [BannerController::class,  'create']);

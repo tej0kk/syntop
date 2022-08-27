@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Banner;
 use Illuminate\Http\Request;
 
+use function PHPUnit\Framework\returnValue;
+
 class BannerController extends Controller
 {
     /**
@@ -14,7 +16,7 @@ class BannerController extends Controller
      */
     public function index()
     {
-        //
+        return view('banner.index');
     }
 
     /**
@@ -24,7 +26,7 @@ class BannerController extends Controller
      */
     public function create()
     {
-        //
+        return view('banner.create');
     }
 
     /**
