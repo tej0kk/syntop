@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BannerController;
+use App\Http\Controllers\BrandController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,17 +19,17 @@ Route::get('/', function () {
     return view('dashboard.index');
 });
 
-Route::get('/product', function () {
-    return view('product.index');
-});
-
-Route::get('/brand', function () {
-    return view('brand.index');
-});
-
 Route::get('/banner', [BannerController::class,  'index']);
 Route::get('/banner/create', [BannerController::class,  'create']);
 Route::post('/banner', [BannerController::class, 'store']);
 Route::get('/banner/{banner}/edit', [BannerController::class, 'edit']);
 Route::patch('/banner/{banner}', [BannerController::class, 'update']);
 Route::delete('/banner/{banner}', [BannerController::class, 'destroy']);
+
+Route::get('/brand', [BrandController::class ,  'index']);
+Route::get('/brand/create', [BrandController::class,  'create']);
+Route::post('/brand', [BrandController::class, 'store']);
+Route::get('/brand/{brand}/edit', [BrandController::class, 'edit']);
+Route::patch('/brand/{brand}', [BrandController::class, 'update']);
+Route::delete('/brand/{brand}', [BrandController::class, 'destroy']);
+
