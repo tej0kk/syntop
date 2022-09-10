@@ -16,7 +16,8 @@ class BannerController extends Controller
      */
     public function index()
     {
-        return view('banner.index');
+        $banners = Banner::all();
+        return view('banner.index', compact('banners'));
     }
 
     /**
@@ -37,7 +38,36 @@ class BannerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // return $request;
+        $request->validate(
+            [
+                'name' => 'required|image|mimes:jpg,png,jpeg|max:2048'
+            ],
+            [
+                'name.required' => 'Photo harus diisi !',
+                'name.image' => 'Photo harus berupa gambar !',
+                'name.mimes' => 'Gambar harus jpg, png, jpeg',
+                'name.max' => 'Gambar maksimal berukuran 2MB'
+            ]
+        );
+
+        if ($request->photo == 'on') {
+            $photo = 'show';
+        } else {
+            $photo = 'hide';
+        }
+
+        $file = $request->file('name'); //ini dimasukan ke dalam direktori laravel
+        $fileName = 'banner' . time() . uniqid() . '-' . $file->getClientOriginalName();
+
+        $file->move(public_path('images/banner'), $fileName);
+
+        Banner::create([
+            'name' => $fileName,
+            'photo' => $photo
+        ]);
+
+        return redirect('/banner');
     }
 
     /**
@@ -59,7 +89,7 @@ class BannerController extends Controller
      */
     public function edit(Banner $banner)
     {
-        //
+        return view('banner.edit', compact('banner'));
     }
 
     /**
@@ -71,7 +101,42 @@ class BannerController extends Controller
      */
     public function update(Request $request, Banner $banner)
     {
-        //
+        // return $request;
+        $request->validate(
+            [
+                'name' => 'image|mimes:jpg,png,jpeg|max:2048'
+            ],
+            [
+                'name.image' => 'Photo harus berupa gambar !',
+                'name.mimes' => 'Gambar harus jpg, png, jpeg',
+                'name.max' => 'Gambar maksimal berukuran 2MB'
+            ]
+        );
+
+        if ($request->photo == 'on') {
+            $photo = 'show';
+        } else {
+            $photo = 'hide';
+        }
+
+        if (isset($request->name)) {
+            unlink(public_path('images/banner/'. $banner->name));
+            
+            $file = $request->file('name'); //ini dimasukan ke dalam direktori laravel
+            $fileName = 'banner' . time() . uniqid() . '-' . $file->getClientOriginalName();
+            $file->move(public_path('images/banner'), $fileName);
+
+            Banner::where('id', $banner->id)->update([
+                'name' => $fileName,
+                'photo' => $photo
+            ]);
+        }else{
+            Banner::where('id', $banner->id)->update([
+                'photo' => $photo
+            ]);
+        }
+
+        return redirect('/banner');
     }
 
     /**
@@ -82,6 +147,10 @@ class BannerController extends Controller
      */
     public function destroy(Banner $banner)
     {
-        //
+        // return $banner;
+        unlink(public_path('images/banner/'. $banner->name));
+        Banner::destroy('id', $banner->id);
+        return redirect('/banner');
+
     }
 }

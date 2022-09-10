@@ -28,3 +28,7 @@ Route::get('/brand', function () {
 
 Route::get('/banner', [BannerController::class,  'index']);
 Route::get('/banner/create', [BannerController::class,  'create']);
+Route::post('/banner', [BannerController::class, 'store']);
+Route::get('/banner/{banner}/edit', [BannerController::class, 'edit']);
+Route::patch('/banner/{banner}', [BannerController::class, 'update']);
+Route::delete('/banner/{banner}', [BannerController::class, 'destroy']);
