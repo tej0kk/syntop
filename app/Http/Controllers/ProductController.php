@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Brand;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        $products = Product::all();
+        return view('product.index', compact('products'));
     }
 
     /**
@@ -24,7 +26,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        $brands = Brand::all();
+        return view('product.create', compact('brands'));
     }
 
     /**
@@ -35,7 +38,38 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate(
+            [
+                'name' => 'required',
+                'price' => 'required',
+                'desc' => 'required',
+                'photo' => 'required',
+                'brand_id' => 'required',
+                'type' => 'required',
+                'recomendation' => 'required',
+            ],
+            [
+                'name.required' => 'Kolom nama harus diisi !',
+                'price.required' => 'Kolom harga harus diisi !',
+                'desc.required' => 'Kolom description harus diisi !',
+            ]
+        );
+        $file = $request->file('photo'); //ini dimasukan ke dalam direktori laravel
+        $fileName = 'photo' . time() . uniqid() . '-' . $file->getClientOriginalName();
+
+        $file->move(public_path('images/product'), $fileName);
+
+        Product::create([
+            'name' => $request->name,
+            'price' => $request->price,
+            'brand_id' => $request->brand_id,
+            'desc' => $request->desc,
+            'type' => $request->type,
+            'recomendation' => $request->recomendation,
+            'photo' => $fileName
+        ]);
+
+        return redirect('product');
     }
 
     /**
